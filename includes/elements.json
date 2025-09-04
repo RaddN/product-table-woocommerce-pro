@@ -620,6 +620,85 @@
         }
     },
     {
+        "el_name": "Product Brands",
+        "el_type": "product_brands",
+        "el_description": "Display product brands (coming)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "show_icons",
+                    "title": "Show Brands Icons",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on",
+                    "description": "Display icons next to brands names"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "link_brands",
+                    "title": "Link Brands",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on",
+                    "description": "Link to Brands pages"
+                },
+                {
+                    "type": "text",
+                    "name": "seperator",
+                    "title": "Seperate By",
+                    "default": ",",
+                    "description": "brands Seperate By (eg. , )"
+                }
+            ],
+            "style": [
+                {
+                    ".product_brands": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#333333"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "select",
+                            "name": "text-align",
+                            "title": "Text Alignment",
+                            "options": [
+                                {
+                                    "value": "left",
+                                    "label": "Left"
+                                },
+                                {
+                                    "value": "center",
+                                    "label": "Center"
+                                },
+                                {
+                                    "value": "right",
+                                    "label": "Right"
+                                }
+                            ],
+                            "default": "left"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
         "el_name": "Product Tags",
         "el_type": "product_tags",
         "el_description": "Display product tags",
@@ -874,7 +953,7 @@
             "content": [],
             "style": [
                 {
-                    ".plugincy-editable-table,.plugincy-product-table":[
+                    ".plugincy-editable-table,.plugincy-product-table": [
                         {
                             "type": "color",
                             "name": "background-color",
@@ -900,5 +979,2275 @@
                 }
             ]
         }
+    },
+    {
+        "el_name": "Attributes (Coming)",
+        "el_type": "product_attributes_table",
+        "el_description": "Table/List of multiple attributes",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "textarea",
+                    "name": "include_attributes",
+                    "title": "Include Attributes",
+                    "default": "",
+                    "description": "Comma-separated attribute slugs to include (leave blank for all visible)"
+                },
+                {
+                    "type": "textarea",
+                    "name": "exclude_attributes",
+                    "title": "Exclude Attributes",
+                    "default": "",
+                    "description": "Comma-separated attribute slugs to exclude"
+                },
+                {
+                    "type": "select",
+                    "name": "layout",
+                    "title": "Layout",
+                    "options": [
+                        {
+                            "value": "table",
+                            "label": "Table"
+                        },
+                        {
+                            "value": "list",
+                            "label": "List"
+                        },
+                        {
+                            "value": "badges",
+                            "label": "Badges"
+                        }
+                    ],
+                    "default": "table"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "link_terms",
+                    "title": "Link Terms",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".product_attributes_table": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#333333"
+                        }
+                    ]
+                },
+                {
+                    ".product_attributes_table table, .product_attributes_table .list": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#ffffff"
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Border Radius",
+                            "unit": "px",
+                            "default": 4,
+                            "min": 0,
+                            "max": 24
+                        }
+                    ]
+                },
+                {
+                    ".product_attributes_table .badge": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Badge Background",
+                            "default": "#eef5ff"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Badge Text",
+                            "default": "#1a73e8"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Custom Field (Meta)",
+        "el_type": "product_meta_field",
+        "el_description": "Display a product custom field by meta key",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "meta_key",
+                    "title": "Meta Key",
+                    "default": "",
+                    "description": "e.g., _custom_code"
+                },
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "name": "suffix_text",
+                    "title": "Suffix",
+                    "default": ""
+                },
+                {
+                    "type": "select",
+                    "name": "format",
+                    "title": "Format",
+                    "options": [
+                        {
+                            "value": "text",
+                            "label": "Text"
+                        },
+                        {
+                            "value": "number",
+                            "label": "Number"
+                        },
+                        {
+                            "value": "date",
+                            "label": "Date (Y-m-d)"
+                        },
+                        {
+                            "value": "price",
+                            "label": "Price"
+                        }
+                    ],
+                    "default": "text"
+                },
+                {
+                    "type": "text",
+                    "name": "date_format",
+                    "title": "Date Format",
+                    "default": "Y-m-d",
+                    "description": "PHP date format (used when Format = Date)"
+                },
+                {
+                    "type": "text",
+                    "name": "fallback",
+                    "title": "Fallback Text",
+                    "default": "",
+                    "description": "Shown when meta not found"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "allow_html",
+                    "title": "Allow HTML",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "off"
+                }
+            ],
+            "style": [
+                {
+                    ".product_meta_field": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 32
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#333333"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Sale Badge",
+        "el_type": "sale_badge",
+        "el_description": "Show a SALE/discount badge when on sale",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "text",
+                    "title": "Badge Text",
+                    "default": "Sale"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_percent",
+                    "title": "Show Discount %",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "select",
+                    "name": "position",
+                    "title": "Position",
+                    "options": [
+                        {
+                            "value": "top-left",
+                            "label": "Top Left"
+                        },
+                        {
+                            "value": "top-right",
+                            "label": "Top Right"
+                        }
+                    ],
+                    "default": "top-left"
+                }
+            ],
+            "style": [
+                {
+                    ".plugincy-sale-badge": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#e63946"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#ffffff"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Border Radius",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 0,
+                            "max": 24
+                        },
+                        {
+                            "type": "number",
+                            "name": "padding",
+                            "title": "Padding",
+                            "unit": "px",
+                            "default": 6,
+                            "min": 0,
+                            "max": 16
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Discount Percentage",
+        "el_type": "discount_percentage",
+        "el_description": "Show discount percentage for on-sale products",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "-{percent}%",
+                    "description": "Use {percent} placeholder"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "round",
+                    "title": "Round to Integer",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".discount_percentage": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#e63946"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 32
+                        },
+                        {
+                            "type": "select",
+                            "name": "font-weight",
+                            "title": "Font Weight",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": "Normal"
+                                },
+                                {
+                                    "value": "bold",
+                                    "label": "Bold"
+                                }
+                            ],
+                            "default": "bold"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Stock Quantity",
+        "el_type": "stock_quantity",
+        "el_description": "Display available stock count if managed",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "only_if_managed",
+                    "title": "Only if Manage Stock",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "number",
+                    "name": "low_stock_threshold",
+                    "title": "Low Stock Threshold",
+                    "default": 2,
+                    "min": 0,
+                    "max": 999
+                },
+                {
+                    "type": "text",
+                    "name": "low_stock_text",
+                    "title": "Low Stock Text",
+                    "default": "Hurry! Only {qty} left",
+                    "description": "Use {qty} placeholder"
+                },
+                {
+                    "type": "text",
+                    "name": "in_stock_text",
+                    "title": "In Stock Text",
+                    "default": "In stock: {qty}"
+                },
+                {
+                    "type": "text",
+                    "name": "out_stock_text",
+                    "title": "Out of Stock Text",
+                    "default": "Out of stock"
+                }
+            ],
+            "style": [
+                {
+                    ".stock_qty": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 24
+                        }
+                    ]
+                },
+                {
+                    ".stock_qty.low": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Low Stock Color",
+                            "default": "#d35400"
+                        }
+                    ]
+                },
+                {
+                    ".stock_qty.out": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Out of Stock Color",
+                            "default": "#dc3545"
+                        }
+                    ]
+                },
+                {
+                    ".stock_qty.in": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "In Stock Color",
+                            "default": "#28a745"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Product Dimensions",
+        "el_type": "product_dimensions",
+        "el_description": "Display product length × width × height",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "{length} × {width} × {height}",
+                    "description": "Use {length},{width},{height}"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_units",
+                    "title": "Show Units",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "number",
+                    "name": "precision",
+                    "title": "Number Precision",
+                    "default": 0,
+                    "min": 0,
+                    "max": 4
+                }
+            ],
+            "style": [
+                {
+                    ".product_dimensions": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#333333"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Product Weight",
+        "el_type": "product_weight",
+        "el_description": "Display product weight",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "show_units",
+                    "title": "Show Units",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "number",
+                    "name": "precision",
+                    "title": "Number Precision",
+                    "default": 0,
+                    "min": 0,
+                    "max": 4
+                },
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "name": "suffix_text",
+                    "title": "Suffix",
+                    "default": ""
+                }
+            ],
+            "style": [
+                {
+                    ".product_weight": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#333333"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Product Link Button",
+        "el_type": "product_permalink",
+        "el_description": "Button linking to the product page",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "button_text",
+                    "title": "Button Text",
+                    "default": "View Product"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "new_tab",
+                    "title": "Open in New Tab",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "off"
+                }
+            ],
+            "style": [
+                {
+                    ".product_permalink a": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#3740ff"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#ffffff"
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Border Radius",
+                            "unit": "px",
+                            "default": 4,
+                            "min": 0,
+                            "max": 50
+                        },
+                        {
+                            "type": "number",
+                            "name": "padding",
+                            "title": "Padding",
+                            "unit": "px",
+                            "default": 10,
+                            "min": 4,
+                            "max": 24
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Gallery Thumbnails",
+        "el_type": "product_gallery_thumbs",
+        "el_description": "Show product gallery thumbnails",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "limit",
+                    "title": "Max Images",
+                    "default": 4,
+                    "min": 1,
+                    "max": 12
+                },
+                {
+                    "type": "checkbox",
+                    "name": "lightbox",
+                    "title": "Enable Lightbox",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "select",
+                    "name": "layout",
+                    "title": "Layout",
+                    "options": [
+                        {
+                            "value": "inline",
+                            "label": "Inline"
+                        },
+                        {
+                            "value": "grid",
+                            "label": "Grid (2x/3x)"
+                        },
+                        {
+                            "value": "stacked",
+                            "label": "Stacked"
+                        }
+                    ],
+                    "default": "inline"
+                }
+            ],
+            "style": [
+                {
+                    ".product_gallery_thumbs img": [
+                        {
+                            "type": "number",
+                            "name": "width",
+                            "title": "Thumb Width",
+                            "unit": "px",
+                            "default": 60,
+                            "min": 24,
+                            "max": 200
+                        },
+                        {
+                            "type": "number",
+                            "name": "height",
+                            "title": "Thumb Height",
+                            "unit": "px",
+                            "default": 60,
+                            "min": 24,
+                            "max": 200
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Border Radius",
+                            "unit": "px",
+                            "default": 4,
+                            "min": 0,
+                            "max": 24
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Product ID",
+        "el_type": "product_id",
+        "el_description": "Display the product ID",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": "ID: "
+                }
+            ],
+            "style": [
+                {
+                    ".product_id": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 20
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#666666"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Regular Price",
+        "el_type": "product_regular_price",
+        "el_description": "Show regular (non-sale) price",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "name": "suffix_text",
+                    "title": "Suffix",
+                    "default": ""
+                },
+                {
+                    "type": "checkbox",
+                    "name": "hide_if_sale",
+                    "title": "Hide if On Sale",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "off"
+                }
+            ],
+            "style": [
+                {
+                    ".product_regular_price .amount": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 16,
+                            "min": 10,
+                            "max": 48
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#666666"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Sale Price",
+        "el_type": "product_sale_price",
+        "el_description": "Show sale price (if on sale)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "name": "suffix_text",
+                    "title": "Suffix",
+                    "default": ""
+                },
+                {
+                    "type": "checkbox",
+                    "name": "hide_if_not_sale",
+                    "title": "Hide if Not On Sale",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".product_sale_price .amount": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 18,
+                            "min": 10,
+                            "max": 48
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#e74c3c"
+                        },
+                        {
+                            "type": "select",
+                            "name": "font-weight",
+                            "title": "Weight",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": "Normal"
+                                },
+                                {
+                                    "value": "bold",
+                                    "label": "Bold"
+                                }
+                            ],
+                            "default": "bold"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "You Save",
+        "el_type": "price_savings",
+        "el_description": "Show savings amount/percent when on sale",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "show_amount",
+                    "title": "Show Amount",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_percent",
+                    "title": "Show Percent",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "You save {amount} ({percent}%)",
+                    "description": "Placeholders: {amount}, {percent}"
+                }
+            ],
+            "style": [
+                {
+                    ".price_savings": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#27ae60"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 32
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Quantity Selector",
+        "el_type": "quantity_selector",
+        "el_description": "Quantity input (for Add to Cart)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "min",
+                    "title": "Min",
+                    "default": 1,
+                    "min": 0,
+                    "max": 999
+                },
+                {
+                    "type": "number",
+                    "name": "max",
+                    "title": "Max",
+                    "default": 0,
+                    "min": 0,
+                    "max": 999,
+                    "description": "0 = Use product max/stock"
+                },
+                {
+                    "type": "number",
+                    "name": "step",
+                    "title": "Step",
+                    "default": 1,
+                    "min": 1,
+                    "max": 50
+                }
+            ],
+            "style": [
+                {
+                    ".quantity_selector input[type=number]": [
+                        {
+                            "type": "number",
+                            "name": "width",
+                            "title": "Width",
+                            "unit": "px",
+                            "default": 70,
+                            "min": 40,
+                            "max": 160
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Radius",
+                            "unit": "px",
+                            "default": 4,
+                            "min": 0,
+                            "max": 20
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Variation Selector",
+        "el_type": "variation_selector",
+        "el_description": "Choose variations (attributes) for variable products",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "textarea",
+                    "name": "attributes",
+                    "title": "Attributes (slugs)",
+                    "default": "",
+                    "description": "Comma separated (leave blank for all available)"
+                },
+                {
+                    "type": "select",
+                    "name": "style",
+                    "title": "Control Style",
+                    "options": [
+                        {
+                            "value": "dropdown",
+                            "label": "Dropdowns"
+                        },
+                        {
+                            "value": "swatches",
+                            "label": "Swatches"
+                        }
+                    ],
+                    "default": "dropdown"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_labels",
+                    "title": "Show Labels",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".variation_selector": [
+                        {
+                            "type": "number",
+                            "name": "gap",
+                            "title": "Gap",
+                            "unit": "px",
+                            "default": 8,
+                            "min": 0,
+                            "max": 24
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Average Rating (Number)",
+        "el_type": "average_rating_number",
+        "el_description": "Numeric average rating, e.g., 4.6/5",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "{avg}/5",
+                    "description": "Placeholder: {avg}"
+                },
+                {
+                    "type": "number",
+                    "name": "decimals",
+                    "title": "Decimals",
+                    "default": 1,
+                    "min": 0,
+                    "max": 3
+                }
+            ],
+            "style": [
+                {
+                    ".average_rating_number": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#222222"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 32
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Reviews Count",
+        "el_type": "reviews_count",
+        "el_description": "Total number of product reviews",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "({count} reviews)"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "link_to_reviews",
+                    "title": "Link to Reviews",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".reviews_count": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#555555"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 24
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Sale Countdown",
+        "el_type": "sale_countdown",
+        "el_description": "Countdown to sale end date (if set)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "{dd}d {hh}h {mm}m {ss}s",
+                    "description": "Placeholders: {dd},{hh},{mm},{ss}"
+                },
+                {
+                    "type": "text",
+                    "name": "expired_text",
+                    "title": "Expired Text",
+                    "default": "Sale ended"
+                }
+            ],
+            "style": [
+                {
+                    ".sale_countdown": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#d0021b"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 28
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Stock Progress",
+        "el_type": "stock_progress",
+        "el_description": "Progress bar (sold vs available)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "goal",
+                    "title": "Goal (optional)",
+                    "default": 0,
+                    "min": 0,
+                    "max": 9999,
+                    "description": "0 = derive from stock/sales if available"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_text",
+                    "title": "Show Text",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "text",
+                    "name": "text_format",
+                    "title": "Text Format",
+                    "default": "{sold} sold / {available} left"
+                }
+            ],
+            "style": [
+                {
+                    ".stock_progress .bar": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Bar Color",
+                            "default": "#27ae60"
+                        },
+                        {
+                            "type": "number",
+                            "name": "height",
+                            "title": "Height",
+                            "unit": "px",
+                            "default": 8,
+                            "min": 4,
+                            "max": 24
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Radius",
+                            "unit": "px",
+                            "default": 4,
+                            "min": 0,
+                            "max": 20
+                        }
+                    ]
+                },
+                {
+                    ".stock_progress .track": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Track Color",
+                            "default": "#eeeeee"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Total Sales",
+        "el_type": "total_sales",
+        "el_description": "Show total sales count",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Format",
+                    "default": "{count} sold"
+                }
+            ],
+            "style": [
+                {
+                    ".total_sales": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#333333"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 13,
+                            "min": 10,
+                            "max": 28
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Badges (New/Hot/Bestseller)",
+        "el_type": "product_badges",
+        "el_description": "Auto badges based on age/sales",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "new_days",
+                    "title": "New if Published within (days)",
+                    "default": 7,
+                    "min": 1,
+                    "max": 60
+                },
+                {
+                    "type": "number",
+                    "name": "hot_sales",
+                    "title": "Hot if Sales ≥",
+                    "default": 10,
+                    "min": 1,
+                    "max": 10000
+                },
+                {
+                    "type": "number",
+                    "name": "bestseller_sales",
+                    "title": "Bestseller if Sales ≥",
+                    "default": 100,
+                    "min": 1,
+                    "max": 100000
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_labels",
+                    "title": "Show Text Labels",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".product_badges .badge": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 11,
+                            "min": 10,
+                            "max": 20
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Radius",
+                            "unit": "px",
+                            "default": 10,
+                            "min": 0,
+                            "max": 20
+                        },
+                        {
+                            "type": "number",
+                            "name": "padding",
+                            "title": "Padding",
+                            "unit": "px",
+                            "default": 6,
+                            "min": 0,
+                            "max": 16
+                        }
+                    ]
+                },
+                {
+                    ".product_badges .badge.new": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "New BG",
+                            "default": "#2dce89"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "New Text",
+                            "default": "#ffffff"
+                        }
+                    ]
+                },
+                {
+                    ".product_badges .badge.hot": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Hot BG",
+                            "default": "#ff6b6b"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Hot Text",
+                            "default": "#ffffff"
+                        }
+                    ]
+                },
+                {
+                    ".product_badges .badge.bestseller": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Bestseller BG",
+                            "default": "#ffa502"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Bestseller Text",
+                            "default": "#ffffff"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Shipping Class",
+        "el_type": "shipping_class",
+        "el_description": "Product shipping class name",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "link",
+                    "title": "Link to Class Archive",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "off"
+                }
+            ],
+            "style": [
+                {
+                    ".shipping_class": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#333333"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Tax Status / Class",
+        "el_type": "tax_info",
+        "el_description": "Tax status and class",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "show_status",
+                    "title": "Show Status",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_class",
+                    "title": "Show Class",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "text",
+                    "name": "separator",
+                    "title": "Separator",
+                    "default": " • "
+                }
+            ],
+            "style": [
+                {
+                    ".tax_info": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 20
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#666666"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "External/Affiliate Button",
+        "el_type": "external_button",
+        "el_description": "Button for external/affiliate products",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "button_text",
+                    "title": "Button Text",
+                    "default": "Buy Now"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "new_tab",
+                    "title": "Open in New Tab",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".external_button a": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#ff8c00"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text Color",
+                            "default": "#ffffff"
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Radius",
+                            "unit": "px",
+                            "default": 4,
+                            "min": 0,
+                            "max": 20
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Downloadable Files",
+        "el_type": "download_links",
+        "el_description": "List of downloadable file links (if downloadable)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "limit",
+                    "title": "Max Files",
+                    "default": 5,
+                    "min": 1,
+                    "max": 50
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_size",
+                    "title": "Show File Size",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "off"
+                }
+            ],
+            "style": [
+                {
+                    ".download_links a": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Link Color",
+                            "default": "#0073aa"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "SKU as Code",
+        "el_type": "sku_code",
+        "el_description": "Render SKU as text or QR (display only)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "select",
+                    "name": "render",
+                    "title": "Render As",
+                    "options": [
+                        {
+                            "value": "text",
+                            "label": "Text"
+                        },
+                        {
+                            "value": "qr",
+                            "label": "QR"
+                        }
+                    ],
+                    "default": "text"
+                },
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": "SKU: "
+                }
+            ],
+            "style": [
+                {
+                    ".sku_code": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 13,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#444444"
+                        }
+                    ]
+                },
+                {
+                    ".sku_code img": [
+                        {
+                            "type": "number",
+                            "name": "width",
+                            "title": "QR Size",
+                            "unit": "px",
+                            "default": 64,
+                            "min": 32,
+                            "max": 256
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Publish Date",
+        "el_type": "publish_date",
+        "el_description": "Product publish date",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Date Format",
+                    "default": "M j, Y"
+                },
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": "Added: "
+                }
+            ],
+            "style": [
+                {
+                    ".publish_date": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#777777"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 20
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Last Updated",
+        "el_type": "modified_date",
+        "el_description": "Product last modified date",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "format",
+                    "title": "Date Format",
+                    "default": "M j, Y"
+                },
+                {
+                    "type": "text",
+                    "name": "prefix_text",
+                    "title": "Prefix",
+                    "default": "Updated: "
+                }
+            ],
+            "style": [
+                {
+                    ".modified_date": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#777777"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 20
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Long Description",
+        "el_type": "long_description",
+        "el_description": "Full product description (excerpted)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "word_limit",
+                    "title": "Word Limit",
+                    "default": 40,
+                    "min": 10,
+                    "max": 400
+                },
+                {
+                    "type": "checkbox",
+                    "name": "text-overflow",
+                    "title": "Show Ellipsis (...)",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".long_description": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 14,
+                            "min": 10,
+                            "max": 24
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#444444"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Low Stock Badge",
+        "el_type": "low_stock_badge",
+        "el_description": "Show a badge when stock is below a threshold",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "threshold",
+                    "title": "Threshold Qty",
+                    "default": 5,
+                    "min": 1,
+                    "max": 999
+                },
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Label",
+                    "default": "Low stock"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_count",
+                    "title": "Append Remaining Count",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".low_stock_badge": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#ff6b6b"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text",
+                            "default": "#ffffff"
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Radius",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 0,
+                            "max": 24
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Font Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 20
+                        },
+                        {
+                            "type": "number",
+                            "name": "padding",
+                            "title": "Padding",
+                            "unit": "px",
+                            "default": 6,
+                            "min": 2,
+                            "max": 16
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Backorder Message",
+        "el_type": "backorder_message",
+        "el_description": "Show when product allows backorders",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Message",
+                    "default": "Available on backorder"
+                }
+            ],
+            "style": [
+                {
+                    ".backorder_message": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#ff9800"
+                        },
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 12,
+                            "min": 10,
+                            "max": 20
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Vendor / Seller",
+        "el_type": "vendor_info",
+        "el_description": "Show vendor/store name (Dokan/WCFM/WC Vendors compatible if present)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "link",
+                    "title": "Link to Vendor Page",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_rating",
+                    "title": "Show Vendor Rating (if available)",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "off"
+                }
+            ],
+            "style": [
+                {
+                    ".vendor_info": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Color",
+                            "default": "#333333"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Barcode (EAN/UPC)",
+        "el_type": "product_barcode",
+        "el_description": "Display EAN/UPC as text or barcode image (requires meta)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "meta_keys",
+                    "title": "EAN/UPC Meta Keys (comma-separated)",
+                    "default": "_barcode,_ean,_upc"
+                },
+                {
+                    "type": "select",
+                    "name": "render",
+                    "title": "Render As",
+                    "options": [
+                        {
+                            "value": "text",
+                            "label": "Text"
+                        },
+                        {
+                            "value": "barcode",
+                            "label": "Barcode"
+                        }
+                    ],
+                    "default": "text"
+                },
+                {
+                    "type": "text",
+                    "name": "prefix",
+                    "title": "Prefix",
+                    "default": "EAN: "
+                }
+            ],
+            "style": [
+                {
+                    ".product_barcode": [
+                        {
+                            "type": "number",
+                            "name": "font-size",
+                            "title": "Text Size",
+                            "unit": "px",
+                            "default": 13,
+                            "min": 10,
+                            "max": 24
+                        }
+                    ]
+                },
+                {
+                    ".product_barcode img": [
+                        {
+                            "type": "number",
+                            "name": "width",
+                            "title": "Barcode Width",
+                            "unit": "px",
+                            "default": 120,
+                            "min": 80,
+                            "max": 300
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Shortcode",
+        "el_type": "shortcode",
+        "el_description": "Render any shortcode output",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "textarea",
+                    "name": "code",
+                    "title": "Shortcode",
+                    "default": "[yith_wcwl_add_to_wishlist]"
+                }
+            ],
+            "style": [
+                {
+                    ".shortcode": [
+                        {
+                            "type": "number",
+                            "name": "margin-top",
+                            "title": "Top Margin",
+                            "unit": "px",
+                            "default": 0,
+                            "min": 0,
+                            "max": 50
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Featured Badge",
+        "el_type": "featured_badge",
+        "el_description": "Show badge if product is marked featured",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Label",
+                    "default": "Featured"
+                }
+            ],
+            "style": [
+                {
+                    ".featured_badge": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#8e44ad"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text",
+                            "default": "#ffffff"
+                        },
+                        {
+                            "type": "number",
+                            "name": "border-radius",
+                            "title": "Radius",
+                            "unit": "px",
+                            "default": 10,
+                            "min": 0,
+                            "max": 20
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "On Sale Badge",
+        "el_type": "on_sale_badge",
+        "el_description": "Show badge when product is on sale",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Label",
+                    "default": "Sale"
+                },
+                {
+                    "type": "checkbox",
+                    "name": "show_percent",
+                    "title": "Append Discount %",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".on_sale_badge": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#e74c3c"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text",
+                            "default": "#ffffff"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Free Shipping Badge",
+        "el_type": "free_shipping_badge",
+        "el_description": "Mark products eligible for free shipping (simple rule)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "price_threshold",
+                    "title": "Price Threshold",
+                    "default": 0,
+                    "min": 0,
+                    "max": 999999,
+                    "description": "0 = always use class-based check only"
+                },
+                {
+                    "type": "text",
+                    "name": "shipping_class",
+                    "title": "Free Class Slug (optional)",
+                    "default": "free-shipping"
+                },
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Label",
+                    "default": "Free Shipping"
+                }
+            ],
+            "style": [
+                {
+                    ".free_shipping_badge": [
+                        {
+                            "type": "color",
+                            "name": "background-color",
+                            "title": "Background",
+                            "default": "#2ecc71"
+                        },
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Text",
+                            "default": "#ffffff"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "Social Share",
+        "el_type": "social_share",
+        "el_description": "Simple share links (Facebook, X, Pinterest, Copy Link)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "checkbox",
+                    "name": "show_copy",
+                    "title": "Show Copy Link",
+                    "checkboxOptions": [
+                        "on",
+                        "off"
+                    ],
+                    "default": "on"
+                }
+            ],
+            "style": [
+                {
+                    ".social_share a": [
+                        {
+                            "type": "number",
+                            "name": "gap",
+                            "title": "Gap",
+                            "unit": "px",
+                            "default": 6,
+                            "min": 0,
+                            "max": 24
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "el_name": "QR Code (Permalink)",
+        "el_type": "qr_permalink",
+        "el_description": "QR code that opens the product page",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Label (optional)",
+                    "default": ""
+                }
+            ],
+            "style": [
+                {
+                    ".qr_permalink img": [
+                        {
+                            "type": "number",
+                            "name": "width",
+                            "title": "Size",
+                            "unit": "px",
+                            "default": 96,
+                            "min": 64,
+                            "max": 240
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+    "el_name": "Custom Link",
+    "el_type": "custom_link",
+    "el_description": "Custom Link",
+    "el_customization_options": {
+      "content": [
+        { "type": "text", "name": "url", "title": "URL", "default": "" },
+        { "type": "text", "name": "label", "title": "Label", "default": "Size guide" }
+      ],
+      "style": [
+        {
+          ".custom_link a": [
+            { "type": "color", "name": "color", "title": "Link Color", "default": "#0073aa", "use_important": true }
+          ]
+        }
+      ]
     }
+  },
+    {
+    "el_name": "Container",
+    "el_type": "container",
+    "el_description": "Container (Row)",
+    "el_customization_options": {
+      "content": [
+        { "type": "number", "name": "col", "title": "Number of Column", "default": "" }
+      ],
+      "style": [
+        {
+          ".custom_link a": [
+            { "type": "color", "name": "color", "title": "Link Color", "default": "#0073aa", "use_important": true }
+          ]
+        }
+      ]
+    }
+  },
+    {
+    "el_name": "Toggle & Accordion info",
+    "el_type": "toggleinfo",
+    "el_description": "Toggle button on click show info",
+    "el_customization_options": {
+      "content": [],
+      "style": [
+        {
+          ".custom_link a": [
+            { "type": "color", "name": "color", "title": "Link Color", "default": "#0073aa", "use_important": true }
+          ]
+        }
+      ]
+    }
+  }
 ]

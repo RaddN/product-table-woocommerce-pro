@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 /**
  * Admin functions for the plugin.
  *
- * @package Product Table for WooCommerce
+ * @package Ultimate Product Table for WooCommerce
  */
 
 class WCProductTab_TablesAdmin {
@@ -24,12 +24,12 @@ class WCProductTab_TablesAdmin {
      public function add_admin_menu()
     {
         add_menu_page(
-            'Product Table for WooCommerce',
-            'Product Table for WooCommerce',
+            'Ultimate Table',
+            'Ultimate Table',
             'manage_options',
             'plugincy-tables',
-            array($this->WCProductTab_AllTablesAdmin, 'admin_page_all_tables'),
-            'dashicons-grid-view',
+            array($this->WCProductTab_AllTablesAdmin, 'render_page'),
+            WCProductTab_BASE_URL . 'assets/images/table.png',
             25
         );
 
@@ -39,7 +39,7 @@ class WCProductTab_TablesAdmin {
             'All Tables',
             'manage_options',
             'plugincy-tables',
-            array($this->WCProductTab_AllTablesAdmin, 'admin_page_all_tables')
+            array($this->WCProductTab_AllTablesAdmin, 'render_page')
         );
 
         add_submenu_page(

@@ -3,7 +3,7 @@
 /**
  * class_helper.php
  *
- * @package Product Table for WooCommerce
+ * @package Ultimate Product Table for WooCommerce
  */
 if (!defined('ABSPATH')) {
     exit;
@@ -147,17 +147,22 @@ class WCProductTab_Tables_Helper
         if ($table_data['show_header']) {
             $html .= '<thead><tr>';
             foreach ($table_data['headers'] as $header) {
-                $html .= '<th>' . esc_html($header) . '</th>';
+                $html .= '<th>' . esc_html($header["title"]) . '</th>';
             }
             $html .= '</tr></thead>';
         }
 
         $html .= '<tbody>';
         $row_count = 1;
+        $count_header = count($table_data["headers"]);
         foreach ($products as $product) {
             $html .= '<tr>';
+            $cellcount = 0;
             foreach ($table_data['rows'][0] as $cell) {
-                $html .= '<td>' . $this->render_cell_content($cell, $product, $row_count) . '</td>';
+                if ($cellcount > -1 && $cellcount < $count_header) {
+                    $html .= '<td>' . $this->render_cell_content($cell, $product, $row_count) . '</td>';
+                    $cellcount++;
+                }
             }
             $html .= '</tr>';
             $row_count++;
@@ -167,7 +172,7 @@ class WCProductTab_Tables_Helper
         if ($table_data['show_footer']) {
             $html .= '<tfoot><tr>';
             foreach ($table_data['footers'] as $footer) {
-                $html .= '<td>' . esc_html($footer) . '</td>';
+                $html .= '<td>' . esc_html($footer["title"]) . '</td>';
             }
             $html .= '</tr></tfoot>';
         }
@@ -241,11 +246,11 @@ class WCProductTab_Tables_Helper
                 $content .= '</form>';
                 $content .= '</div>';
                 break;
-            
+
             case 'view_details':
-                $content = '<div class="plugincy-view-details"><a href="' . get_permalink($wc_product->get_id()) . '" class="'.(isset($content_settings["button_type"]) ? esc_html($content_settings["button_type"]) : ''). $element['type'] . '">'.(isset($content_settings["button_text"]) ? esc_html($content_settings["button_text"]) : 'View Details').'</a></div>';
+                $content = '<div class="plugincy-view-details"><a href="' . get_permalink($wc_product->get_id()) . '" class="' . (isset($content_settings["button_type"]) ? esc_html($content_settings["button_type"]) : '') . $element['type'] . '">' . (isset($content_settings["button_text"]) ? esc_html($content_settings["button_text"]) : 'View Details') . '</a></div>';
                 break;
-            
+
 
             case 'short_description':
                 $content = '<div class="plugincy-short-description ' . $element['type'] . '"><span class="prefix">' . (isset($content_settings["prefix_text"]) ? esc_html($content_settings["prefix_text"]) : '') . '</span>' . $wc_product->get_short_description() . '<span class="suffix">' . (isset($content_settings["suffix_text"]) ? esc_html($content_settings["suffix_text"]) : '') . '</span></div>';

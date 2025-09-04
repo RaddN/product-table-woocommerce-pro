@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 /**
  * Admin functions for the plugin.
  *
- * @package Product Table for WooCommerce
+ * @package Ultimate Product Table for WooCommerce
  */
 
 class WCProductTab_settings

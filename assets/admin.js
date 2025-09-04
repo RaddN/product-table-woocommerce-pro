@@ -1,8 +1,25 @@
+// assets\admin.js
 jQuery(document).ready(function ($) {
     let currentCell = null;
     let excludedProducts = [];
     let tableData = {
-        headers: ["Column 1", "Column 2", "Column 3", "Column 4", "Column 5"],
+        headers: [
+            {
+                title: "Column 1",
+                index: 0
+            }, {
+                title: "Column 2",
+                index: 1
+            }, {
+                title: "Column 3",
+                index: 2
+            }, {
+                title: "Column 4",
+                index: 3
+            }, {
+                title: "Column 5",
+                index: 4
+            }],
         rows: [[
             { elements: [] },
             { elements: [] },
@@ -10,23 +27,149 @@ jQuery(document).ready(function ($) {
             { elements: [] },
             { elements: [] }
         ]],
-        footers: ["Footer 1", "Footer 2", "Footer 3", "Footer 4", "Footer 5"],
+        footers: [
+            {
+                title: "Footer 1",
+                index: 0
+            }, {
+                title: "Footer 2",
+                index: 1
+            }, {
+                title: "Footer 3",
+                index: 2
+            }, {
+                title: "Footer 4",
+                index: 3
+            }, {
+                title: "Footer 5",
+                index: 4
+            }],
         show_header: true,
-        show_footer: false
+        show_footer: false,
+        layout: 'table'
     };
 
     window.plugincyLoadTableData = function (data) {
         tableData = data;
+        if (!tableData.layout) tableData.layout = 'table';
         if (data.query_settings && data.query_settings.excluded_products) {
             excludedProducts = data.query_settings.excluded_products;
             updateExcludedCount();
         }
-        renderTable();
-        if (data.query_settings) {
-            updateQuerySettingsUI(data.query_settings);
-            refreshProductPreview(); // Load preview after loading data
+        // If editing, skip chooser and show builder immediately
+        if (window.__PLUGINCY_EDIT_MODE__) {
+            $('#plugincy-layout-chooser').hide();
+            $('#plugincy-builder-tabs').show();
+            renderTable();
+            if (data.query_settings) {
+                updateQuerySettingsUI(data.query_settings);
+                refreshProductPreview(); // Load preview after loading data
+            }
         }
     };
+
+    /** ---------------------------
+     * Layout chooser (new tables)
+     * --------------------------*/
+    if (!window.__PLUGINCY_EDIT_MODE__) {
+        // Preselect existing (if it came from server default), otherwise 'table'
+        const preselect = window.__PLUGINCY_EXISTING_LAYOUT__ || 'table';
+        $(`.plugincy-layout-card[data-layout="${preselect}"] input[type="radio"]`).prop('checked', true).closest('.plugincy-layout-card').addClass('selected');
+
+        $(document).on('click', '.plugincy-layout-card:not(.plugincy-layout-card--disabled)', function () {
+            $('.plugincy-layout-card').removeClass('selected');
+            $(this).addClass('selected').find('input[type="radio"]').prop('checked', true);
+        });
+
+        $('#plugincy-layout-continue').on('click', function () {
+            const picked = $('input[name="layout_choice"]:checked').val() || 'table';
+            applyLayoutPreset(picked);
+            tableData.layout = picked;
+            $('#plugincy-layout-chooser').hide();
+            $('#plugincy-builder-tabs').show();
+            renderTable();
+            refreshProductPreview();
+        });
+    }
+
+    // Allow switching layout later from Settings tab (optional: add a simple dropdown)
+    // If you later add a layout switcher control, call applyLayoutPreset(newLayout) then set tableData.layout=newLayout; renderTable(); refreshProductPreview();
+
+    function applyLayoutPreset(layout) {
+        // Keep user content if they go back and forth; only tweak structure for first-time or empty state
+        const isEmpty = (tableData.rows?.[0]?.[0]?.elements || []).length === 0 && tableData.headers?.length === 5;
+        if (!isEmpty) return;
+
+        if (layout === 'table') {
+            // Already suitable – keep defaults
+            return;
+        }
+        if (layout === 'comparison') {
+            // Comparison: fewer columns to start, e.g., Feature  2 products
+            tableData.headers = [{
+                title: "Feature",
+                index: 0
+            }, {
+                title: "Product A",
+                index: 1
+            }, {
+                title: "Product B",
+                index: 2
+            }];
+            tableData.footers = [{
+                title: "Feature",
+                index: 0
+            }, {
+                title: "Product A",
+                index: 1
+            }, {
+                title: "Product B",
+                index: 2
+            }];
+            tableData.rows = [[{ elements: [] }, { elements: [] }, { elements: [] }]];
+            return;
+        }
+        if (layout === 'grid') {
+            // Grid: start with 3 columns (cards), one row template
+            tableData.headers = [
+                {
+                    title: "Card 1",
+                    index: 0
+                }, {
+                    title: "Card 2",
+                    index: 1
+                }, {
+                    title: "Card 3",
+                    index: 2
+                }];
+            tableData.footers = [
+                {
+                    title: "Card 1",
+                    index: 0
+                }, {
+                    title: "Card 2",
+                    index: 1
+                }, {
+                    title: "Card 3",
+                    index: 2
+                }];
+            tableData.rows = [[{ elements: [] }, { elements: [] }, { elements: [] }]];
+            return;
+        }
+        if (layout === 'list') {
+            // List: single column
+            tableData.headers = [{
+                title: "Item",
+                index: 0
+            }];
+            tableData.footers = [{
+                title: "Item",
+                index: 0
+            }];
+            tableData.rows = [[{ elements: [] }]];
+            return;
+        }
+    }
 
     // Function to refresh product preview
     function refreshProductPreview() {
@@ -225,34 +368,61 @@ jQuery(document).ready(function ($) {
         const $header = $table.find("thead tr:nth-child(2)");
         const $body = $table.find("tbody");
         const $footer = $table.find("tfoot tr");
+        const layout = tableData.layout || 'table';
+        $table.attr('data-layout', layout);
+
+        console.log(tableData.headers);
+
+        // Update visibility settings
+        $("#show-header").prop("checked", tableData.show_header);
+        $("#show-footer").prop("checked", tableData.show_footer);
+
+        // Determine the icon class based on tableData.show_header
+        const visibilityheadIcon = !tableData.show_header ? 'dashicons-hidden' : 'dashicons-visibility';
+        const visibilityFootIcon = !tableData.show_footer ? 'dashicons-hidden' : 'dashicons-visibility';
+
 
         // Render header
         $header.empty();
-        tableData.headers.forEach(function (header, index) {
-            $header.append(`
-        <th contenteditable="true" class="plugincy-editable-header" data-index="${index}">
-            ${header}
-            <span class="plugincy-column-actions">
-                <span class="plugincy-edit-element" data-type="" title="Edit Element">✏️</span>
-                <span class="plugincy-delete-column" data-index="${index}" title="Delete Column">🗑️</span>
-            </span>
-        </th>
-    `);
+        tableData.headers.forEach(function (header) {
+            if (header.index > -1) {
+                $header.append(`
+                <th contenteditable="true" class="plugincy-editable-header" data-index="${header.index}">
+                    ${header.title}
+                    <span class="plugincy-column-actions">
+                        <span class="plugincy-edit-element" data-type="" title="Edit Element">✏️</span>
+                        <span class="plugincy-delete-column" data-index="${header.index}" title="Delete Column">🗑️</span>
+                    </span>
+                </th>
+            `);
+            }
         });
-        $header.append(`<th class="plugincy-action-column">
-            <span class="button"><span class="dashicons dashicons-admin-customizer"></span></span>
-            <span class="button"><span class="dashicons dashicons-visibility"></span></span>
-            </th>`);
+        $header.append(`
+            <th class="plugincy-action-column">
+                <span class="button"><span class="dashicons dashicons-admin-customizer"></span></span>
+                <span class="button" id="headerVisibilityBtn">
+                    <span class="dashicons ${visibilityheadIcon}"></span>
+                </span>
+            </th>
+        `);
+
+        // Count the number of children in #table-head-management
+        const childCount = $("#table-head-management").children().length;
+
+        // Change the colspan value of .tableactionhead based on the child count
+        $(".tableactionhead").attr("colspan", childCount - 1);
+
 
         // Render body
         $body.find('tr').first().remove();
         tableData.rows.forEach(function (row, rowIndex) {
             let $row = $("<tr>");
             row.forEach(function (cell, cellIndex) {
-                let cellContent = "";
-                if (cell.elements && cell.elements.length > 0) {
-                    cell.elements.forEach(function (element) {
-                        cellContent += `
+                if (cellIndex > -1 && cellIndex < tableData.headers.length) {
+                    let cellContent = "";
+                    if (cell.elements && cell.elements.length > 0) {
+                        cell.elements.forEach(function (element) {
+                            cellContent += `
                 <div class="plugincy-element" data-type="${element.type}">
                     ${element.type.replace(/_/g, " ")}
                     <span class="plugincy-element-actions">
@@ -261,11 +431,13 @@ jQuery(document).ready(function ($) {
                     </span>
                 </div>
             `;
-                    });
-                } else {
-                    cellContent = `<div class="plugincy-add-element">+</div>`;
+                        });
+                        cellContent += `<div class="plugincy-add-element">+</div>`;
+                    } else {
+                        cellContent = `<div class="plugincy-add-element">+</div>`;
+                    }
+                    $row.append(`<td class="plugincy-editable-cell" data-row="${rowIndex}" data-col="${cellIndex}"><div class="plugincy-cell-content">${cellContent}</div></td>`);
                 }
-                $row.append(`<td class="plugincy-editable-cell" data-row="${rowIndex}" data-col="${cellIndex}"><div class="plugincy-cell-content">${cellContent}</div></td>`);
             });
 
             // Show delete button only if query type is 'products' and there's more than one row
@@ -280,27 +452,23 @@ jQuery(document).ready(function ($) {
         // Render footer
         $footer.empty();
         tableData.footers.forEach(function (footer, index) {
-            $footer.append(`<td contenteditable="true" class="plugincy-editable-footer" data-index="${index}">${footer}</td>`);
+            $footer.append(`<td contenteditable="true" class="plugincy-editable-footer" data-index="${footer.index}">${footer.title}</td>`);
         });
         $footer.append(`<td>
             <span class="button"><span class="dashicons dashicons-admin-customizer"></span></span>
-            <span class="button"><span class="dashicons dashicons-visibility"></span></span>
+            <span class="button" id="footerVisibilityBtn"><span class="dashicons ${visibilityFootIcon}"></span></span>
             </td>`);
 
-        // Update visibility settings
-        $("#show-header").prop("checked", tableData.show_header);
-        $("#show-footer").prop("checked", tableData.show_footer);
-
         if (tableData.show_header) {
-            $table.find("thead").show();
+            $table.find("thead").css("opacity", 1); // Set opacity to 1 (fully visible)
         } else {
-            $table.find("thead").hide();
+            $table.find("thead").css("opacity", 0.5); // Set opacity to 0.5 (semi-transparent)
         }
 
         if (tableData.show_footer) {
-            $table.find("tfoot").show();
+            $table.find("tfoot").css("opacity", 1); // Set opacity to 1 (fully visible)
         } else {
-            $table.find("tfoot").hide();
+            $table.find("tfoot").css("opacity", 0.5); // Set opacity to 0.5 (semi-transparent)
         }
 
         // Update shortcode display if in edit mode
@@ -327,6 +495,8 @@ jQuery(document).ready(function ($) {
         // Add excluded products to table data
         tableData.query_settings = tableData.query_settings || {};
         tableData.query_settings.excluded_products = excludedProducts;
+        // Ensure layout is set
+        if (!tableData.layout) tableData.layout = $('input[name="layout_choice"]:checked').val() || 'table';
 
         // Serialize the table data before submitting
         $("#table-data-input").val(serializeTableData());
@@ -373,9 +543,15 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).on("click", "#add-column", function () {
-        const newIndex = tableData.headers.length;
-        tableData.headers.push("Column " + (newIndex + 1));
-        tableData.footers.push("Footer " + (newIndex + 1));
+        const newIndex = Math.max(...tableData.headers.map(header => header.index));
+        tableData.headers.push({
+            title: "Column " + (newIndex + 1),
+            index: newIndex
+        });
+        tableData.footers.push({
+            title: "Footer " + (newIndex + 1),
+            index: newIndex
+        });
 
         tableData.rows.forEach(function (row) {
             row.push({ elements: [] });
@@ -470,8 +646,16 @@ jQuery(document).ready(function ($) {
 
         if (confirm("Are you sure you want to delete this column? This will remove all data in this column.")) {
             // Remove from headers and footers
-            tableData.headers.splice(columnIndex, 1);
-            tableData.footers.splice(columnIndex, 1);
+            const indexToRemove = tableData.headers.findIndex(header => header.index === columnIndex);
+            // Check if the header exists and remove it
+            if (indexToRemove !== -1) {
+                tableData.headers.splice(indexToRemove, 1);
+            }
+            const indexToRemovefot = tableData.footers.findIndex(footer => footer.index === columnIndex);
+            // Check if the footer exists and remove it
+            if (indexToRemovefot !== -1) {
+                tableData.footers.splice(indexToRemovefot, 1);
+            }
 
             // Remove from all rows
             tableData.rows.forEach(function (row) {
@@ -503,16 +687,48 @@ jQuery(document).ready(function ($) {
 
     $(document).on("blur", ".plugincy-editable-header", function () {
         const index = $(this).data("index");
-        tableData.headers[index] = $(this).text().replace(/\n/g, '');
+        const indexToChange = tableData.headers.findIndex(header => header.index === index);
+        if (indexToChange !== -1) {
+            tableData.headers[indexToChange].title = $(this).text().trim();
+            renderTable();
+        }
     });
 
     $(document).on("blur", ".plugincy-editable-footer", function () {
         const index = $(this).data("index");
-        tableData.footers[index] = $(this).text().replace(/\n/g, '');
+        const indexToChange = tableData.footers.findIndex(footer => footer.index === index);
+        if (indexToChange !== -1) {
+            tableData.footers[indexToChange].title = $(this).text().trim();
+        }
     });
 
     $(document).on("change", "#show-header", function () {
         tableData.show_header = $(this).is(":checked");
+        renderTable();
+    });
+
+    $(document).on("click", "#headerVisibilityBtn", function () {
+        const $show_header = $("#show-header");
+
+        // Toggle the checked state
+        $show_header.prop("checked", !$show_header.is(":checked"));
+
+        // Update the tableData.show_header value
+        tableData.show_header = $show_header.is(":checked");
+
+        // Re-render the table
+        renderTable();
+    });
+    $(document).on("click", "#footerVisibilityBtn", function () {
+        const $show_footer = $("#show-footer");
+
+        // Toggle the checked state
+        $show_footer.prop("checked", !$show_footer.is(":checked"));
+
+        // Update the tableData.show_footer value
+        tableData.show_footer = $show_footer.is(":checked");
+
+        // Re-render the table
         renderTable();
     });
 
@@ -796,6 +1012,8 @@ jQuery(document).ready(function ($) {
 
     // Function to move column
     function moveColumn(sourceIndex, targetIndex) {
+        sourceIndex = tableData.headers.findIndex(header => header.index === sourceIndex);
+        targetIndex = tableData.headers.findIndex(header => header.index === targetIndex);
         // Move header
         const headerItem = tableData.headers.splice(sourceIndex, 1)[0];
         tableData.headers.splice(targetIndex, 0, headerItem);

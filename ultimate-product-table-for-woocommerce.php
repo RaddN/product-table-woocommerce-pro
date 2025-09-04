@@ -1,19 +1,23 @@
 <?php
 
 /**
- * Plugin Name: Product Table for WooCommerce
- * Plugin URI:  https://plugincy.com/product-table-woocommerce/
+ * Plugin Name: Ultimate Product Table for WooCommerce
+ * Plugin URI:  https://plugincy.com/ultimate-product-table-for-woocommerce/
  * Description: Create custom WooCommerce product tables with shortcodes
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Plugincy
  * Author URI: https://plugincy.com
  * license: GPL2
- * Text Domain: product-table-woocommerce
+ * Text Domain: ultimate-product-table-for-woocommerce
  * Requires Plugins: woocommerce
  */
 
 if (!defined('ABSPATH')) {
     exit;
+}
+
+if( ! defined( 'WCProductTab_BASE_URL' ) ){
+    define( "WCProductTab_BASE_URL", plugin_dir_url(__FILE__) );
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/db.php';
@@ -60,7 +64,7 @@ class WCProductTab_INIT
     {
         if (!class_exists('WooCommerce')) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-error"><p>Product Table for WooCommerce requires WooCommerce to be installed and activated.</p></div>';
+                echo '<div class="notice notice-error"><p>Ultimate Product Table for WooCommerce requires WooCommerce to be installed and activated.</p></div>';
             });
             return;
         }
@@ -69,8 +73,8 @@ class WCProductTab_INIT
     public function enqueue_admin_scripts($hook)
     {
         if (strpos($hook, 'plugincy') !== false) {
-            wp_enqueue_script('plugincy-admin-js', plugin_dir_url(__FILE__) . 'assets/admin.js', array('jquery'), '1.0.0', true);
-            wp_enqueue_style('plugincy-admin-css', plugin_dir_url(__FILE__) . 'assets/admin.css', array(), '1.0.0');
+            wp_enqueue_script('plugincy-admin-js', plugin_dir_url(__FILE__) . 'assets/admin.js', array('jquery'), '1.0.1', true);
+            wp_enqueue_style('plugincy-admin-css', plugin_dir_url(__FILE__) . 'assets/admin.css', array(), '1.0.1');
 
             // Localize script to pass data to JavaScript
             wp_localize_script('plugincy-admin-js', 'wcproducttab_ajax ', array(
@@ -84,7 +88,7 @@ class WCProductTab_INIT
 
     public function enqueue_frontend_scripts()
     {
-        wp_enqueue_style('plugincy-frontend-css', plugin_dir_url(__FILE__) . 'assets/frontend.css', array(), '1.0.0');
+        wp_enqueue_style('plugincy-frontend-css', plugin_dir_url(__FILE__) . 'assets/frontend.css', array(), '1.0.1');
     }
 
     public function handle_form_submissions()

@@ -2,7 +2,7 @@
 /**
  * Database connection and query functions.
  *
- * @package Product Table for WooCommerce
+ * @package Ultimate Product Table for WooCommerce
  */
 if (!defined('ABSPATH')) {
     exit;

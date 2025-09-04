@@ -1,10 +1,10 @@
-=== Product Table for WooCommerce ===
+=== Ultimate Product Table for WooCommerce ===
 Contributors: plugincy
 Tags: woocommerce, product table, shortcode, product display, ecommerce
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Create custom WooCommerce product tables with shortcodes to display products in 
 
 == Description ==
 
-Product Table for WooCommerce allows you to create and display custom product tables on your WordPress site using simple shortcodes. Perfect for showcasing products in a clean, organized tabular format that's easy for customers to browse and compare.
+Ultimate Product Table for WooCommerce allows you to create and display custom product tables on your WordPress site using simple shortcodes. Perfect for showcasing products in a clean, organized tabular format that's easy for customers to browse and compare.
 
 = Key Features =
 
@@ -56,7 +56,7 @@ Use the `[wcproducttab_table]` shortcode to display your product tables. The plu
 
 1. Log in to your WordPress dashboard
 2. Navigate to Plugins > Add New
-3. Search for "Product Table for WooCommerce"
+3. Search for "Ultimate Product Table for WooCommerce"
 4. Click "Install Now" and then "Activate"
 5. Make sure WooCommerce is installed and activated
 
@@ -114,7 +114,7 @@ Yes, the plugin includes an AJAX preview feature that lets you see how your tabl
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.1 =
 * Initial release
 * Create custom product tables with shortcodes
 * WooCommerce integration
@@ -125,12 +125,12 @@ Yes, the plugin includes an AJAX preview feature that lets you see how your tabl
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release of Product Table for WooCommerce. Create beautiful product tables with shortcodes.
+= 1.0.1 =
+Initial release of Ultimate Product Table for WooCommerce. Create beautiful product tables with shortcodes.
 
 == Support ==
 
-For support and documentation, please visit: https://plugincy.com/product-table-woocommerce/
+For support and documentation, please visit: https://plugincy.com/ultimate-product-table-for-woocommerce/
 
 == Developer Notes ==
 

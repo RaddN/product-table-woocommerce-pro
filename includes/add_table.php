@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 /**
  * add_table.php for the plugin.
  *
- * @package Product Table for WooCommerce
+ * @package Ultimate Product Table for WooCommerce
  */
 
 class WCProductTab_add_table
@@ -65,6 +65,7 @@ class WCProductTab_add_table
         // Parse existing table data
         $existing_data = $table_data ? json_decode($table_data->table_data, true) : null;
         $query_settings = $existing_data['query_settings'] ?? array();
+        $existing_layout = $existing_data['layout'] ?? 'table';
 
 ?>
         <div class="wrap">
@@ -73,6 +74,55 @@ class WCProductTab_add_table
             <div class="plugincy-table-builder">
                 <form method="post" action="" id="plugincy-table-form">
                     <?php wp_nonce_field('wcproducttab_save_table', 'wcproducttab_nonce'); ?>
+
+                    <!-- Layout Selection -->
+                    <div id="plugincy-layout-chooser" class="plugincy-layout-chooser" <?php echo $edit_id ? 'style="display:none;"' : ''; ?>>
+                        <h2>Choose a Layout</h2>
+                        <p class="description">Pick a layout to start building your product view. You can change it later.</p>
+                        <div class="plugincy-layout-grid">
+                            <label class="plugincy-layout-card" data-layout="table">
+                                <input type="radio" name="layout_choice" value="table">
+                                <div class="plugincy-layout-thumb plugincy-layout-thumb--table"></div>
+                                <div class="plugincy-layout-title">Table Layout</div>
+                                <div class="plugincy-layout-desc">Classic rows & columns.</div>
+                            </label>
+                            <label class="plugincy-layout-card" data-layout="comparison">
+                                <input type="radio" name="layout_choice" value="comparison">
+                                <div class="plugincy-layout-thumb plugincy-layout-thumb--comparison"></div>
+                                <div class="plugincy-layout-title">Comparison Table</div>
+                                <div class="plugincy-layout-desc">Compare products side-by-side.</div>
+                            </label>
+                            <label class="plugincy-layout-card" data-layout="grid">
+                                <input type="radio" name="layout_choice" value="grid">
+                                <div class="plugincy-layout-thumb plugincy-layout-thumb--grid"></div>
+                                <div class="plugincy-layout-title">Grid Layout</div>
+                                <div class="plugincy-layout-desc">Card-based product grid.</div>
+                            </label>
+                            <label class="plugincy-layout-card" data-layout="list">
+                                <input type="radio" name="layout_choice" value="list">
+                                <div class="plugincy-layout-thumb plugincy-layout-thumb--list"></div>
+                                <div class="plugincy-layout-title">List Layout</div>
+                                <div class="plugincy-layout-desc">Compact stacked list.</div>
+                            </label>
+                            <!-- Coming soon examples -->
+                            <div class="plugincy-layout-card plugincy-layout-card--disabled" aria-disabled="true">
+                                <div class="plugincy-layout-badge">Coming soon</div>
+                                <div class="plugincy-layout-thumb plugincy-layout-thumb--masonry"></div>
+                                <div class="plugincy-layout-title">Masonry</div>
+                                <div class="plugincy-layout-desc">Dynamic tile layout.</div>
+                            </div>
+                            <div class="plugincy-layout-card plugincy-layout-card--disabled" aria-disabled="true">
+                                <div class="plugincy-layout-badge">Coming soon</div>
+                                <div class="plugincy-layout-thumb plugincy-layout-thumb--slider"></div>
+                                <div class="plugincy-layout-title">Slider</div>
+                                <div class="plugincy-layout-desc">Carousel of products.</div>
+                            </div>
+                        </div>
+                        <div class="plugincy-layout-actions">
+                            <button type="button" class="button button-primary" id="plugincy-layout-continue">Continue</button>
+                        </div>
+                    </div>
+
 
                     <div class="plugincy-form-group">
                         <label for="table-title">Table Title</label>
@@ -90,7 +140,7 @@ class WCProductTab_add_table
                     </div>
 
                     <!-- Tab Navigation -->
-                    <div class="plugincy-tabs">
+                    <div class="plugincy-tabs" id="plugincy-builder-tabs" <?php echo $edit_id ? '' : 'style="display:none;"'; ?>>
                         <nav class="nav-tab-wrapper">
                             <a href="#" class="nav-tab nav-tab-active" data-tab="columns">Columns</a>
                             <a href="#" class="nav-tab" data-tab="query">Query</a>
@@ -124,10 +174,10 @@ class WCProductTab_add_table
                                         <table id="plugincy-editable-table" class="plugincy-editable-table">
                                             <thead id="table-header">
                                                 <tr>
-                                                    <th colspan="5"></th>
+                                                    <th class="tableactionhead" colspan="5"></th>
                                                     <th class="plugincy-action-column">Actions</th>
                                                 </tr>
-                                                <tr>
+                                                <tr id="table-head-management">
                                                     <th contenteditable="true" class="plugincy-editable-header">Column 1</th>
                                                     <th contenteditable="true" class="plugincy-editable-header">Column 2</th>
                                                     <th contenteditable="true" class="plugincy-editable-header">Column 3</th>
@@ -176,7 +226,7 @@ class WCProductTab_add_table
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                            <tfoot id="table-footer" style="display: none;">
+                                            <tfoot id="table-footer">
                                                 <tr>
                                                     <td contenteditable="true" class="plugincy-editable-footer">Footer 1</td>
                                                     <td contenteditable="true" class="plugincy-editable-footer">Footer 2</td>
@@ -371,6 +421,9 @@ class WCProductTab_add_table
                         }
                         foreach ($elements as $element) {
                             $element_type = $element['el_type'];
+                            if($element_type === "product_table"){
+                                continue;
+                            }
                             $element_label = $element['el_name'];
                             $element_description = $element['el_description'] ?? '';
                         ?>
@@ -398,6 +451,10 @@ class WCProductTab_add_table
                 });
             </script>
         <?php endif; ?>
+        <script>
+            window.__PLUGINCY_EDIT_MODE__ = <?php echo $edit_id ? 'true' : 'false'; ?>;
+            window.__PLUGINCY_EXISTING_LAYOUT__ = <?php echo json_encode($existing_layout); ?>;
+        </script>
 <?php
     }
 
@@ -410,7 +467,7 @@ class WCProductTab_add_table
         $query_settings = isset($_POST['query_settings']) ? json_decode(stripslashes(sanitize_text_field(wp_unslash($_POST['query_settings']))), true) : [];
         $excluded_products = isset($_POST['excluded_products']) ? array_map('intval', $_POST['excluded_products']) : array();
         $table_data = isset($_POST['table_data']) ? json_decode(stripslashes(sanitize_text_field(wp_unslash($_POST['table_data']))), true) : null;
-
+        $count_header = count($table_data["headers"]);
         $products = $this->WCProductTab_Tables_Helper->get_products_for_table([], $query_settings, $excluded_products);
 
         $html = '';
@@ -424,15 +481,19 @@ class WCProductTab_add_table
                     $current_row_template = $table_data['rows'][$row_template_index];
 
                     $html .= '<tr class="plugincy-product-preview-row" data-product-id="' . $product->ID . '" data-row-template="' . $row_template_index . '">';
+                    $cellcount = 0;
 
                     foreach ($current_row_template as $cell) {
-                        $html .= '<td>';
-                        if (isset($cell['elements']) && !empty($cell['elements'])) {
-                            foreach ($cell['elements'] as $element) {
-                                $html .= $this->render_element($element, $wc_product, $row_count);
+                        if ($cellcount > -1 && $cellcount < $count_header) {
+                            $html .= '<td>';
+                            if (isset($cell['elements']) && !empty($cell['elements'])) {
+                                foreach ($cell['elements'] as $element) {
+                                    $html .= $this->render_element($element, $wc_product, $row_count);
+                                }
                             }
+                            $html .= '</td>';
+                            $cellcount++;
                         }
-                        $html .= '</td>';
                     }
 
                     $html .= '<td>
