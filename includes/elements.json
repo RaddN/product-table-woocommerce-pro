@@ -622,7 +622,7 @@
     {
         "el_name": "Product Brands",
         "el_type": "product_brands",
-        "el_description": "Display product brands (coming)",
+        "el_description": "Display product brands",
         "el_customization_options": {
             "content": [
                 {
@@ -981,8 +981,8 @@
         }
     },
     {
-        "el_name": "Attributes (Coming)",
-        "el_type": "product_attributes_table",
+        "el_name": "Attributes",
+        "el_type": "product_attributes",
         "el_description": "Table/List of multiple attributes",
         "el_customization_options": {
             "content": [
@@ -1273,70 +1273,7 @@
         }
     },
     {
-        "el_name": "Discount Percentage",
-        "el_type": "discount_percentage",
-        "el_description": "Show discount percentage for on-sale products",
-        "el_customization_options": {
-            "content": [
-                {
-                    "type": "text",
-                    "name": "format",
-                    "title": "Format",
-                    "default": "-{percent}%",
-                    "description": "Use {percent} placeholder"
-                },
-                {
-                    "type": "checkbox",
-                    "name": "round",
-                    "title": "Round to Integer",
-                    "checkboxOptions": [
-                        "on",
-                        "off"
-                    ],
-                    "default": "on"
-                }
-            ],
-            "style": [
-                {
-                    ".discount_percentage": [
-                        {
-                            "type": "color",
-                            "name": "color",
-                            "title": "Text Color",
-                            "default": "#e63946"
-                        },
-                        {
-                            "type": "number",
-                            "name": "font-size",
-                            "title": "Font Size",
-                            "unit": "px",
-                            "default": 14,
-                            "min": 10,
-                            "max": 32
-                        },
-                        {
-                            "type": "select",
-                            "name": "font-weight",
-                            "title": "Font Weight",
-                            "options": [
-                                {
-                                    "value": "normal",
-                                    "label": "Normal"
-                                },
-                                {
-                                    "value": "bold",
-                                    "label": "Bold"
-                                }
-                            ],
-                            "default": "bold"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "el_name": "Stock Quantity",
+        "el_name": "Stock Quantity Info",
         "el_type": "stock_quantity",
         "el_description": "Display available stock count if managed",
         "el_customization_options": {
@@ -1535,67 +1472,6 @@
                             "name": "color",
                             "title": "Text Color",
                             "default": "#333333"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "el_name": "Product Link Button",
-        "el_type": "product_permalink",
-        "el_description": "Button linking to the product page",
-        "el_customization_options": {
-            "content": [
-                {
-                    "type": "text",
-                    "name": "button_text",
-                    "title": "Button Text",
-                    "default": "View Product"
-                },
-                {
-                    "type": "checkbox",
-                    "name": "new_tab",
-                    "title": "Open in New Tab",
-                    "checkboxOptions": [
-                        "on",
-                        "off"
-                    ],
-                    "default": "off"
-                }
-            ],
-            "style": [
-                {
-                    ".product_permalink a": [
-                        {
-                            "type": "color",
-                            "name": "background-color",
-                            "title": "Background",
-                            "default": "#3740ff"
-                        },
-                        {
-                            "type": "color",
-                            "name": "color",
-                            "title": "Text Color",
-                            "default": "#ffffff"
-                        },
-                        {
-                            "type": "number",
-                            "name": "border-radius",
-                            "title": "Border Radius",
-                            "unit": "px",
-                            "default": 4,
-                            "min": 0,
-                            "max": 50
-                        },
-                        {
-                            "type": "number",
-                            "name": "padding",
-                            "title": "Padding",
-                            "unit": "px",
-                            "default": 10,
-                            "min": 4,
-                            "max": 24
                         }
                     ]
                 }
@@ -2874,14 +2750,49 @@
         "el_customization_options": {
             "content": [
                 {
+                    "type": "select",
+                    "name": "source",
+                    "title": "Vendor Source",
+                    "options": [
+                        {
+                            "value": "wp_user",
+                            "label": "WordPress Author (Default)"
+                        },
+                        {
+                            "value": "dokan",
+                            "label": "Dokan Vendor"
+                        },
+                        {
+                            "value": "wcfm",
+                            "label": "WCFM Vendor"
+                        },
+                        {
+                            "value": "wcvendors",
+                            "label": "WC Vendors"
+                        },
+                        {
+                            "value": "auto",
+                            "label": "Auto Detect (Try All)"
+                        }
+                    ],
+                    "default": "wp_user"
+                },
+                {
                     "type": "checkbox",
                     "name": "link",
-                    "title": "Link to Vendor Page",
+                    "title": "Enable Link",
                     "checkboxOptions": [
                         "on",
                         "off"
                     ],
                     "default": "on"
+                },
+                {
+                    "type": "text",
+                    "name": "link_format",
+                    "title": "Custom Link Format",
+                    "default": "",
+                    "description": "Use placeholders {username} and {id}. Leave blank to use vendor default page."
                 },
                 {
                     "type": "checkbox",
@@ -2902,71 +2813,6 @@
                             "name": "color",
                             "title": "Color",
                             "default": "#333333"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "el_name": "Barcode (EAN/UPC)",
-        "el_type": "product_barcode",
-        "el_description": "Display EAN/UPC as text or barcode image (requires meta)",
-        "el_customization_options": {
-            "content": [
-                {
-                    "type": "text",
-                    "name": "meta_keys",
-                    "title": "EAN/UPC Meta Keys (comma-separated)",
-                    "default": "_barcode,_ean,_upc"
-                },
-                {
-                    "type": "select",
-                    "name": "render",
-                    "title": "Render As",
-                    "options": [
-                        {
-                            "value": "text",
-                            "label": "Text"
-                        },
-                        {
-                            "value": "barcode",
-                            "label": "Barcode"
-                        }
-                    ],
-                    "default": "text"
-                },
-                {
-                    "type": "text",
-                    "name": "prefix",
-                    "title": "Prefix",
-                    "default": "EAN: "
-                }
-            ],
-            "style": [
-                {
-                    ".product_barcode": [
-                        {
-                            "type": "number",
-                            "name": "font-size",
-                            "title": "Text Size",
-                            "unit": "px",
-                            "default": 13,
-                            "min": 10,
-                            "max": 24
-                        }
-                    ]
-                },
-                {
-                    ".product_barcode img": [
-                        {
-                            "type": "number",
-                            "name": "width",
-                            "title": "Barcode Width",
-                            "unit": "px",
-                            "default": 120,
-                            "min": 80,
-                            "max": 300
                         }
                     ]
                 }
@@ -3039,49 +2885,6 @@
                             "default": 10,
                             "min": 0,
                             "max": 20
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "el_name": "On Sale Badge",
-        "el_type": "on_sale_badge",
-        "el_description": "Show badge when product is on sale",
-        "el_customization_options": {
-            "content": [
-                {
-                    "type": "text",
-                    "name": "label",
-                    "title": "Label",
-                    "default": "Sale"
-                },
-                {
-                    "type": "checkbox",
-                    "name": "show_percent",
-                    "title": "Append Discount %",
-                    "checkboxOptions": [
-                        "on",
-                        "off"
-                    ],
-                    "default": "on"
-                }
-            ],
-            "style": [
-                {
-                    ".on_sale_badge": [
-                        {
-                            "type": "color",
-                            "name": "background-color",
-                            "title": "Background",
-                            "default": "#e74c3c"
-                        },
-                        {
-                            "type": "color",
-                            "name": "color",
-                            "title": "Text",
-                            "default": "#ffffff"
                         }
                     ]
                 }
@@ -3201,53 +3004,86 @@
         }
     },
     {
-    "el_name": "Custom Link",
-    "el_type": "custom_link",
-    "el_description": "Custom Link",
-    "el_customization_options": {
-      "content": [
-        { "type": "text", "name": "url", "title": "URL", "default": "" },
-        { "type": "text", "name": "label", "title": "Label", "default": "Size guide" }
-      ],
-      "style": [
-        {
-          ".custom_link a": [
-            { "type": "color", "name": "color", "title": "Link Color", "default": "#0073aa", "use_important": true }
-          ]
+        "el_name": "Custom Link",
+        "el_type": "custom_link",
+        "el_description": "Custom Link",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "text",
+                    "name": "url",
+                    "title": "URL",
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "name": "label",
+                    "title": "Label",
+                    "default": "Size guide"
+                }
+            ],
+            "style": [
+                {
+                    ".custom_link a": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Link Color",
+                            "default": "#0073aa",
+                            "use_important": true
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  },
+    },
     {
-    "el_name": "Container",
-    "el_type": "container",
-    "el_description": "Container (Row)",
-    "el_customization_options": {
-      "content": [
-        { "type": "number", "name": "col", "title": "Number of Column", "default": "" }
-      ],
-      "style": [
-        {
-          ".custom_link a": [
-            { "type": "color", "name": "color", "title": "Link Color", "default": "#0073aa", "use_important": true }
-          ]
+        "el_name": "Container",
+        "el_type": "container",
+        "el_description": "Container (Row)",
+        "el_customization_options": {
+            "content": [
+                {
+                    "type": "number",
+                    "name": "col",
+                    "title": "Number of Column",
+                    "default": ""
+                }
+            ],
+            "style": [
+                {
+                    ".custom_link a": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Link Color",
+                            "default": "#0073aa",
+                            "use_important": true
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  },
+    },
     {
-    "el_name": "Toggle & Accordion info",
-    "el_type": "toggleinfo",
-    "el_description": "Toggle button on click show info",
-    "el_customization_options": {
-      "content": [],
-      "style": [
-        {
-          ".custom_link a": [
-            { "type": "color", "name": "color", "title": "Link Color", "default": "#0073aa", "use_important": true }
-          ]
+        "el_name": "Toggle & Accordion info",
+        "el_type": "toggleinfo",
+        "el_description": "Toggle button on click show info",
+        "el_customization_options": {
+            "content": [],
+            "style": [
+                {
+                    ".custom_link a": [
+                        {
+                            "type": "color",
+                            "name": "color",
+                            "title": "Link Color",
+                            "default": "#0073aa",
+                            "use_important": true
+                        }
+                    ]
+                }
+            ]
         }
-      ]
     }
-  }
 ]

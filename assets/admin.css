@@ -386,7 +386,11 @@ tr.plugincy-product-preview-row img {
   align-items: center;
 }
 
-.plugincy-element:hover .plugincy-element-actions {
+.plugincy-element.plugincy-element-container>.plugincy-element-actions {
+    height: 16px;
+}
+
+.plugincy-element:hover>.plugincy-element-actions {
   opacity: 1;
 }
 

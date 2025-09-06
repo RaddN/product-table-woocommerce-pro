@@ -158,8 +158,8 @@ class WCProductTab_add_table
 
                                 <div class="plugincy-table-container">
                                     <div class="plugincy-table-controls">
-                                        <button type="button" class="button" id="add-column">Add Column</button>
-                                        <button type="button" class="button" id="add-row" style="display:none;">Add Row</button>
+                                        <button type="button" class="button" id="add-column" style="<?php echo !$existing_layout === "comparison" ? 'display:block;' : 'display:none;'; ?>">Add Column</button>
+                                        <button type="button" class="button" id="add-row" style="<?php echo $existing_layout === "comparison" ? 'display:block;' : 'display:none;'; ?>">Add Row</button>
                                         <div class="plugincy-editable-cell" data-row="1" data-col="0">
                                             <div class="plugincy-element" style="cursor: pointer;padding: 0;background: transparent;">
                                                 <button type="button" class="button plugincy-edit-element" data-type="product_table" id="style-table" title="Edit Table">Customize Table</button>
@@ -325,7 +325,7 @@ class WCProductTab_add_table
                                 <div class="plugincy-form-group">
                                     <label for="products-per-page">Products Per Page</label>
                                     <input type="number" id="products-per-page" name="products_per_page"
-                                        value="<?php echo isset($query_settings['products_per_page']) ? esc_attr($query_settings['products_per_page']) : 10; ?>" min="1" max="100">
+                                        value="<?php echo isset($query_settings['products_per_page']) ? esc_attr($query_settings['products_per_page']) : null; ?>" min="1" max="100">
                                     <p class="description">Maximum number of products to display in the table (1-100).</p>
                                 </div>
 
@@ -421,7 +421,7 @@ class WCProductTab_add_table
                         }
                         foreach ($elements as $element) {
                             $element_type = $element['el_type'];
-                            if($element_type === "product_table"){
+                            if ($element_type === "product_table") {
                                 continue;
                             }
                             $element_label = $element['el_name'];

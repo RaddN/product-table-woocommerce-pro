@@ -126,6 +126,18 @@ jQuery(document).ready(function ($) {
                 title: "Product B",
                 index: 2
             }];
+
+            tableData.featuretext = [{
+                title: "Feature 1",
+                index: 0
+            }, {
+                title: "Feature 2",
+                index: 1
+            }, {
+                title: "Feature 3",
+                index: 2
+            }];
+
             tableData.rows = [[{ elements: [] }, { elements: [] }, { elements: [] }]];
             return;
         }
@@ -212,7 +224,7 @@ jQuery(document).ready(function ($) {
             selected_categories: $('#selected-categories').val() || [],
             selected_tags: $('#selected-tags').val() || [],
             selected_products: $('#selected-products').val() ? $('#selected-products').val().map(Number) : [],
-            products_per_page: parseInt($('#products-per-page').val()) || 10,
+            products_per_page: parseInt($('#products-per-page').val()) || (tableData.layout === 'comparison' ? 2 : 10),
             order_by: $('#order-by').val(),
             order: $('#order').val()
         };
@@ -312,7 +324,7 @@ jQuery(document).ready(function ($) {
         const $addRowBtn = $('#add-row');
         const $rowInfoMessage = $('#row-info-message');
 
-        if (queryType === 'products') {
+        if (queryType === 'products' || tableData.layout === 'comparison') {
             $addRowBtn.show();
             $rowInfoMessage.show();
 
@@ -363,6 +375,62 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    function renderCell(elements, ctx = { scope: 'cell', col: null, containerIdx: null }) {
+        let html = '';
+        elements.forEach(function (element, elIdx) {
+            if (element.type === 'container') {
+                // column count from settings
+                let colCount = 1;
+                if (element.settings?.content_settings?.col) {
+                    colCount = parseInt(element.settings.content_settings.col, 10) || 1;
+                }
+
+                // ensure columns array length === colCount
+                if (!Array.isArray(element.columns)) element.columns = [];
+                if (element.columns.length < colCount) {
+                    for (let i = element.columns.length; i < colCount; i++) element.columns[i] = [];
+                } else if (element.columns.length > colCount) {
+                    element.columns = element.columns.slice(0, colCount);
+                }
+
+                // build columns
+                let colsHtml = '';
+                for (let i = 0; i < colCount; i++) {
+                    const inner = renderCell(element.columns[i], { scope: 'container', col: i, containerIdx: elIdx });
+                    colsHtml += `
+                    <div class="plugincy-container-col" style="flex-basis: 50%;border:1px dotted #beb9b9;border-radius:5px;padding:7px;" data-container-col="${i}">
+                        ${inner}
+                        <div class="plugincy-add-element" data-container-col="${i}">+</div>
+                    </div>`;
+                }
+
+                html += `
+                <div class="plugincy-element plugincy-element-container" data-type="container" data-container-idx="${elIdx}" style="background:transparent;padding:0;">
+                    <div class="plugincy-container" style="display:flex;justify-content:space-around;gap:10px;">${colsHtml}</div>
+                    <span class="plugincy-element-actions">
+                        <span class="plugincy-edit-element" data-type="container" data-el-idx="${elIdx}" title="Edit Element">✏️</span>
+                        <span class="plugincy-delete-element" data-type="container" data-el-idx="${elIdx}" title="Remove Element">🗑️</span>
+                    </span>
+                </div>`;
+            } else {
+                // normal chip; add index so we can edit/delete the specific instance
+                const baseAttrs = (ctx.scope === 'container')
+                    ? `data-in-container="1" data-container-col="${ctx.col}" data-container-idx="${ctx.containerIdx}" data-child-idx="${elIdx}"`
+                    : `data-el-idx="${elIdx}"`;
+
+                html += `
+                <div class="plugincy-element" data-type="${element.type}" ${baseAttrs}>
+                    ${element.type.replace(/_/g, " ")}
+                    <span class="plugincy-element-actions">
+                        <span class="plugincy-edit-element" data-type="${element.type}" title="Edit Element">✏️</span>
+                        <span class="plugincy-delete-element" data-type="${element.type}" title="Remove Element">🗑️</span>
+                    </span>
+                </div>`;
+            }
+        });
+        return html;
+    }
+
     function renderTable() {
         const $table = $("#plugincy-editable-table");
         const $header = $table.find("thead tr:nth-child(2)");
@@ -370,8 +438,6 @@ jQuery(document).ready(function ($) {
         const $footer = $table.find("tfoot tr");
         const layout = tableData.layout || 'table';
         $table.attr('data-layout', layout);
-
-        console.log(tableData.headers);
 
         // Update visibility settings
         $("#show-header").prop("checked", tableData.show_header);
@@ -421,19 +487,11 @@ jQuery(document).ready(function ($) {
                 if (cellIndex > -1 && cellIndex < tableData.headers.length) {
                     let cellContent = "";
                     if (cell.elements && cell.elements.length > 0) {
-                        cell.elements.forEach(function (element) {
-                            cellContent += `
-                <div class="plugincy-element" data-type="${element.type}">
-                    ${element.type.replace(/_/g, " ")}
-                    <span class="plugincy-element-actions">
-                        <span class="plugincy-edit-element" data-type="${element.type}" title="Edit Element">✏️</span>
-                        <span class="plugincy-delete-element" data-type="${element.type}" title="Remove Element">🗑️</span>
-                    </span>
-                </div>
-            `;
-                        });
+                        cellContent += renderCell(cell.elements, { scope: 'cell' });
+                        // add button AFTER elements at the cell level
                         cellContent += `<div class="plugincy-add-element">+</div>`;
                     } else {
+                        // empty cell: show add button
                         cellContent = `<div class="plugincy-add-element">+</div>`;
                     }
                     $row.append(`<td class="plugincy-editable-cell" data-row="${rowIndex}" data-col="${cellIndex}"><div class="plugincy-cell-content">${cellContent}</div></td>`);
@@ -506,6 +564,12 @@ jQuery(document).ready(function ($) {
 
     $(document).on("click", ".plugincy-add-element", function () {
         currentCell = $(this).closest(".plugincy-editable-cell");
+
+        // identify container context (if any)
+        const $containerWrap = $(this).closest(".plugincy-element-container");
+        window.currentContainerIdx = $containerWrap.length ? parseInt($containerWrap.data('container-idx'), 10) : null;
+        window.currentContainerCol = $(this).is('[data-container-col]') ? parseInt($(this).data('container-col'), 10) : null;
+
         $("#plugincy-element-modal .plugincy-modal-body").html(modal_content);
         $("#plugincy-element-modal .plugincy-modal-header h3").text("Add Element");
         $("#plugincy-element-modal").show();
@@ -516,6 +580,7 @@ jQuery(document).ready(function ($) {
         const rowIndex = currentCell.data("row");
         const colIndex = currentCell.data("col");
 
+        // ensure cell array
         if (!tableData.rows[rowIndex][colIndex].elements) {
             tableData.rows[rowIndex][colIndex].elements = [];
         }
@@ -523,23 +588,43 @@ jQuery(document).ready(function ($) {
         let elementContent = "";
         if (elementType === "custom_text") {
             elementContent = prompt("Enter custom text:");
-            if (elementContent === null) {
-                return; // User cancelled
-            }
+            if (elementContent === null) return;
         }
 
-        tableData.rows[rowIndex][colIndex].elements.push({
-            type: elementType,
-            content: elementContent
-        });
+        // if adding INTO a container column
+        if (Number.isInteger(window.currentContainerIdx) && Number.isInteger(window.currentContainerCol)) {
+            const containerEl = tableData.rows[rowIndex][colIndex].elements[window.currentContainerIdx];
+            if (!containerEl || containerEl.type !== 'container') {
+                alert('Container not found.');
+            } else {
+                // ensure columns length from settings.col
+                let colCount = 1;
+                if (containerEl.settings?.content_settings?.col) {
+                    colCount = parseInt(containerEl.settings.content_settings.col, 10) || 1;
+                }
+                if (!Array.isArray(containerEl.columns)) containerEl.columns = [];
+                for (let i = containerEl.columns.length; i < colCount; i++) containerEl.columns[i] = [];
+                // push into specific column
+                containerEl.columns[window.currentContainerCol].push({ type: elementType, content: elementContent });
+            }
+        } else {
+            // add at cell root
+            tableData.rows[rowIndex][colIndex].elements.push({ type: elementType, content: elementContent });
+        }
 
+        // cleanup + refresh
+        window.currentContainerIdx = null;
+        window.currentContainerCol = null;
         renderTable();
         refreshProductPreview();
         $("#plugincy-element-modal").hide();
     });
 
-    $(document).on("click", ".plugincy-close", function () {
+    $(document).on("click", ".plugincy-close, .cancel-element-edit", function () {
         $("#plugincy-element-modal").hide();
+        window.currentContainerIdx = null;
+        window.currentContainerCol = null;
+        window.currentEditContext = null;
     });
 
     $(document).on("click", "#add-column", function () {
@@ -564,7 +649,7 @@ jQuery(document).ready(function ($) {
     $(document).on("click", "#add-row", function () {
         const queryType = $('#query-type').val();
 
-        if (queryType !== 'products') {
+        if (queryType !== 'products' && tableData.layout !== 'comparison') {
             alert('Additional rows can only be added when using "Specific Products" query type.');
             return;
         }
@@ -739,67 +824,84 @@ jQuery(document).ready(function ($) {
 
     $(document).on("click", ".plugincy-delete-element", function (e) {
         e.stopPropagation();
-        if (confirm("Remove this element?")) {
-            const $cell = $(this).closest(".plugincy-editable-cell");
-            const rowIndex = $cell.data("row");
-            const colIndex = $cell.data("col");
-            const elementType = $(this).data("type");
+        if (!confirm("Remove this element?")) return;
 
-            tableData.rows[rowIndex][colIndex].elements = tableData.rows[rowIndex][colIndex].elements.filter(function (element) {
-                return element.type !== elementType;
-            });
+        const $cell = $(this).closest(".plugincy-editable-cell");
+        const rowIndex = $cell.data("row");
+        const colIndex = $cell.data("col");
 
-            renderTable();
-            refreshProductPreview();
+        // container child?
+        const $chip = $(this).closest('.plugincy-element');
+        const inContainer = $chip.is('[data-in-container]') || $chip.closest('.plugincy-element-container').length;
+
+        if (inContainer && $chip.is('[data-child-idx]')) {
+            const containerIdx = parseInt($chip.data('container-idx'), 10);
+            const containerCol = parseInt($chip.data('container-col'), 10);
+            const childIdx = parseInt($chip.data('child-idx'), 10);
+
+            const containerEl = tableData.rows[rowIndex][colIndex].elements[containerIdx];
+            if (containerEl?.columns?.[containerCol]?.length) {
+                containerEl.columns[containerCol].splice(childIdx, 1);
+            }
+        } else if ($chip.hasClass('plugincy-element-container')) {
+            // deleting the whole container
+            const containerIdx = parseInt($chip.data('container-idx'), 10);
+            tableData.rows[rowIndex][colIndex].elements.splice(containerIdx, 1);
+        } else {
+            // delete by exact index at cell root
+            const elIdx = parseInt($chip.attr('data-el-idx'), 10);
+            if (Number.isInteger(elIdx)) {
+                tableData.rows[rowIndex][colIndex].elements.splice(elIdx, 1);
+            }
         }
+
+        renderTable();
+        refreshProductPreview();
     });
 
     // Handle edit element click
     $(document).on("click", ".plugincy-edit-element", function (e) {
         e.stopPropagation();
 
-        const $element = $(this).closest('.plugincy-element');
-        const $cell = $element.closest('.plugincy-editable-cell');
+        const $chip = $(this).closest('.plugincy-element');
+        const $cell = $chip.closest('.plugincy-editable-cell');
         const rowIndex = $cell.data("row");
         const colIndex = $cell.data("col");
         const elementType = $(this).data("type");
 
+        let elementData = null;
+        let context = { rowIndex, colIndex, elementType };
 
+        if ($chip.is('[data-in-container]')) {
+            // edit a child inside container
+            const containerIdx = parseInt($chip.data('container-idx'), 10);
+            const containerCol = parseInt($chip.data('container-col'), 10);
+            const childIdx = parseInt($chip.data('child-idx'), 10);
+            const containerEl = tableData.rows[rowIndex][colIndex].elements[containerIdx];
 
-        if (elementType === "product_table") {
-            tableData.rows[rowIndex] = [];
-            tableData.rows[rowIndex][colIndex] = {};
-            tableData.rows[rowIndex][colIndex]["elements"] = [
-                {
-                    "content": "",
-                    "type": "product_table"
-                }
-            ];
+            elementData = containerEl?.columns?.[containerCol]?.[childIdx] || null;
+            context.inContainer = true;
+            context.containerIdx = containerIdx;
+            context.containerCol = containerCol;
+            context.childIdx = childIdx;
+        } else if ($chip.hasClass('plugincy-element-container')) {
+            // editing the container itself
+            const containerIdx = parseInt($chip.data('container-idx'), 10);
+            elementData = tableData.rows[rowIndex][colIndex].elements[containerIdx];
+            context.isContainer = true;
+            context.containerIdx = containerIdx;
+        } else {
+            // edit cell root element by index
+            const elIdx = parseInt($chip.attr('data-el-idx'), 10);
+            elementData = tableData.rows[rowIndex][colIndex].elements[elIdx] || null;
+            context.elIdx = elIdx;
         }
 
-        // Find the element in tableData
-        const cellElements = tableData.rows[rowIndex][colIndex].elements;
-        const elementData = cellElements.find(el => el.type === elementType);
-
-        // Get element configuration
         const elementConfig = getElementConfig(elementType);
-        if (!elementConfig) {
-            alert('Element configuration not found');
-            return;
-        }
+        if (!elementConfig) { alert('Element configuration not found'); return; }
 
-        // Store current editing context
-        window.currentEditContext = {
-            rowIndex: rowIndex,
-            colIndex: colIndex,
-            elementType: elementType,
-            elementData: elementData
-        };
-
-        // Generate and show customization form
-        const formHTML = generateCustomizationForm(elementConfig, elementData.settings || {});
-
-        // Update modal content
+        window.currentEditContext = { ...context, elementData };
+        const formHTML = generateCustomizationForm(elementConfig, elementData?.settings || {});
         $("#plugincy-element-modal .plugincy-modal-header h3").text("Edit Element");
         $("#plugincy-element-modal .plugincy-modal-body").html(formHTML);
         $("#plugincy-element-modal").show();
@@ -1277,29 +1379,24 @@ jQuery(document).ready(function ($) {
 
     // Handle save element settings
     $(document).on("click", ".save-element-settings", function () {
-        const context = window.currentEditContext;
-        if (!context) return;
+        const ctx = window.currentEditContext;
+        if (!ctx) return;
 
-        // Collect form data
+        // collect settings (existing logic)
         const settings = {};
         $('.plugincy-customization-form .plugincy-form-field').each(function () {
             const fieldName = $(this).data('field');
             let selector = $(this).data('selector');
-            let use_important = $(this).data('important');
-            let checkboxOptions = $(this).data('checkbox') ?? ''; // Get the string from data attribute
-            let checkboxArray = checkboxOptions.split(','); // Convert the string to an array
+            const use_important = $(this).data('important');
+            const checkboxOptions = ($(this).data('checkbox') ?? '').split(',');
             const tab = $(this).data('tab');
-            if (tab === "content") {
-                selector = "content_settings";
-            }
+            if (tab === "content") selector = "content_settings";
             const unit = $(this).data('unit') || '';
             const $input = $(this).find('input, select, textarea');
-            if (!settings[selector]) {
-                settings[selector] = {};
-            }
+            if (!settings[selector]) settings[selector] = {};
 
             if ($input.attr('type') === 'checkbox') {
-                settings[selector][fieldName] = checkboxArray[$input.is(':checked') ? 0 : 1] + (use_important === true ? `!important` : '');
+                settings[selector][fieldName] = checkboxOptions[$input.is(':checked') ? 0 : 1] + (use_important === true ? `!important` : '');
             } else if ($input.attr('type') === 'radio') {
                 const checkedRadio = $(this).find('input[type="radio"]:checked');
                 if (checkedRadio.length) {
@@ -1310,25 +1407,41 @@ jQuery(document).ready(function ($) {
             }
         });
 
-        // Update element data
-        const cellElements = tableData.rows[context.rowIndex][context.colIndex].elements;
+        const cellEls = tableData.rows[ctx.rowIndex][ctx.colIndex].elements;
 
-        const elementIndex = cellElements.findIndex(el => el.type === context.elementType);
+        // apply to the specific target
+        if (ctx.inContainer) {
+            const containerEl = cellEls[ctx.containerIdx];
+            const child = containerEl?.columns?.[ctx.containerCol]?.[ctx.childIdx];
+            if (child) child.settings = settings;
 
-        if (elementIndex !== -1) {
-            cellElements[elementIndex].settings = settings;
+            // if changing container's column count via settings on *container child* makes no sense, skip
+        } else if (ctx.isContainer) {
+            const containerEl = cellEls[ctx.containerIdx];
+            if (containerEl) {
+                containerEl.settings = settings;
 
-            // Update content for custom text
-            if (context.elementType === 'custom_text' && settings.custom_content) {
-                cellElements[elementIndex].content = settings.custom_content;
+                // sync columns to new count if "col" changed
+                const newCount = parseInt(settings?.content_settings?.col ?? 1, 10) || 1;
+                if (!Array.isArray(containerEl.columns)) containerEl.columns = [];
+                if (containerEl.columns.length < newCount) {
+                    for (let i = containerEl.columns.length; i < newCount; i++) containerEl.columns[i] = [];
+                } else if (containerEl.columns.length > newCount) {
+                    containerEl.columns = containerEl.columns.slice(0, newCount);
+                }
+            }
+        } else {
+            const el = cellEls[ctx.elIdx];
+            if (el) {
+                el.settings = settings;
+                if (ctx.elementType === 'custom_text' && settings.custom_content) {
+                    el.content = settings.custom_content;
+                }
             }
         }
 
-        // Re-render table and refresh preview
         renderTable();
         refreshProductPreview();
-
-        // Close modal
         $("#plugincy-element-modal").hide();
         window.currentEditContext = null;
     });
